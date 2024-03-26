@@ -1,27 +1,24 @@
 package com.unipu.smart_parksystem.repository;
+
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.entity.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class TransactionRepositoryTest {
 
-    LocalDateTime timeOfCreating = LocalDateTime.now();
-    LocalDateTime timeOfExit = timeOfCreating.plus(60, ChronoUnit.MINUTES);
-
-    double pricePerMinute = 0.02;
+    Instant timeOfCreating = Instant.now();
+    Instant timeOfExit = timeOfCreating.plus(60, ChronoUnit.MINUTES);
     long minutesDifference = ChronoUnit.MINUTES.between(timeOfCreating, timeOfExit);
-    double totalPrice = minutesDifference * pricePerMinute;
+    BigDecimal totalPrice = (new BigDecimal(minutesDifference)).multiply(new BigDecimal("0.02"));
 
-    LocalDateTime timeOfExitTimeout = timeOfExit.plusMinutes(15);
+    Instant timeOfExitTimeout = timeOfExit.plus(15, ChronoUnit.MINUTES);
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -32,7 +29,7 @@ class TransactionRepositoryTest {
         Transaction transaction =
                 Transaction.builder()
                         .amount(totalPrice)
-                        .created(Timestamp.valueOf(timeOfCreating))
+                        .created(timeOfCreating)
                         .build();
 
         transactionRepository.save(transaction);
@@ -42,16 +39,16 @@ class TransactionRepositoryTest {
     public void saveTransactionWithTicketId(){
         Ticket ticket = Ticket.builder()
                 .registration("zg556pl")
-                .timeOfEnter(Timestamp.valueOf(timeOfCreating))
-                .timeOfExit(Timestamp.valueOf(timeOfExit))
+                .timeOfEnter(timeOfCreating)
+                .timeOfExit(timeOfExit)
                 .created(true)
                 .price(totalPrice)
                 .build();
 
         Transaction transaction = Transaction.builder()
-                .created(Timestamp.valueOf(timeOfCreating))
+                .created(timeOfCreating)
                 .amount(totalPrice)
-                .modified(Timestamp.valueOf(timeOfCreating))
+                .modified(timeOfCreating)
                 .ticket(ticket)
                 .build();
 

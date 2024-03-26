@@ -1,7 +1,13 @@
 package com.unipu.smart_parksystem.entity;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -22,10 +28,9 @@ public class Transaction {
             generator = "transaction_sequence"
     )
     private Long transactionId;
-    private double amount;
-//    private Long ticketId;
-    private Timestamp created;
-    private Timestamp modified;
+    private BigDecimal amount;
+    private Instant created;
+    private Instant modified;
 
     @ManyToOne(
             cascade = CascadeType.ALL

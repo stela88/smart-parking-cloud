@@ -5,24 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.awt.*;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class TicketRepositoryTest {
 
-    LocalDateTime timeOfEnter = LocalDateTime.now();
-    LocalDateTime timeOfExit = timeOfEnter.plus(60, ChronoUnit.MINUTES);
-
-    double pricePerMinute = 0.02;
+    Instant timeOfEnter = Instant.now();
+    Instant timeOfExit = timeOfEnter.plus(60, ChronoUnit.MINUTES);
     long minutesDifference = ChronoUnit.MINUTES.between(timeOfEnter, timeOfExit);
-    double totalPrice = minutesDifference * pricePerMinute;
+    BigDecimal totalPrice = (new BigDecimal(minutesDifference)).multiply(new BigDecimal("0.02"));
 
-    LocalDateTime timeOfExitTimeout = timeOfExit.plusMinutes(15);
+    Instant timeOfExitTimeout = timeOfExit.plus(15, ChronoUnit.MINUTES);
 
 
     @Autowired
@@ -33,10 +28,10 @@ class TicketRepositoryTest {
         Ticket ticket = Ticket
                 .builder()
                 .registration("zg184pj")
-                .timeOfEnter(Timestamp.valueOf(timeOfEnter))
-                .timeOfExit(Timestamp.valueOf(timeOfExit))
+                .timeOfEnter(timeOfEnter)
+                .timeOfExit(timeOfExit)
                 .price(totalPrice)
-                .exitTimeout(Timestamp.valueOf(timeOfExitTimeout))
+                .exitTimeout(timeOfExitTimeout)
                 .created(true)
                 .build();
 
