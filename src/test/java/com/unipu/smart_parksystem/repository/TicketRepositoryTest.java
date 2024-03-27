@@ -31,8 +31,8 @@ class TicketRepositoryTest {
                 .timeOfEnter(timeOfEnter)
                 .timeOfExit(timeOfExit)
                 .price(totalPrice)
+                .createdTs(timeOfEnter)
                 .exitTimeout(timeOfExitTimeout)
-                .created(true)
                 .build();
 
         ticketRepository.save(ticket);

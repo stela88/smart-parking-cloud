@@ -29,8 +29,8 @@ public class Transaction {
     )
     private Long transactionId;
     private BigDecimal amount;
-    private Instant created;
-    private Instant modified;
+    private Instant createdTs;
+    private Instant modifiedTs;
 
     @ManyToOne(
             cascade = CascadeType.ALL

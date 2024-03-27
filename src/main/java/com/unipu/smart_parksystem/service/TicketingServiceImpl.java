@@ -25,7 +25,12 @@ public class TicketingServiceImpl implements TicketingService{
     }
 
     @Override
-    public List<Ticket> fetchTicketByRegistration(String registration) {
+    public List<Ticket> fetchTicketList(){
+        return ticketRepository.findAll();
+    }
+
+    @Override
+    public Ticket fetchTicketByRegistration(String registration) {
         return ticketRepository.findByRegistrationIgnoreCase(registration);
     }
 
@@ -88,6 +93,16 @@ public class TicketingServiceImpl implements TicketingService{
     public Optional<Ticket> findTicketById(Long ticketId) {
         return ticketRepository.findById(ticketId);
     }
+
+    @Override
+    public List<Ticket> fetchActiveTickets() {
+        return ticketRepository.findByTimeOfExitIsNull();
+    }
+
+    public List<Ticket> fetchActiveTicketsByRegistration(String registration) {
+        return ticketRepository.findByRegistrationAndTimeOfExitIsNullAndTimeOfEnterIsNotNull(registration);
+    }
+
 
     @Transactional
     public Ticket create(String registration) {

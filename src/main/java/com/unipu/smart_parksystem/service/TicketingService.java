@@ -9,11 +9,14 @@ import java.util.Optional;
 public interface TicketingService {
 
     public Ticket saveTicket(Ticket ticket);
-    List<Ticket> fetchTicketByRegistration(String registration);
-
+    public List<Ticket> fetchTicketList();
+    Ticket fetchTicketByRegistration(String registration);
     public Ticket fetchTicketById(Long ticketId) throws TicketNotFoundException;
     public void deleteTicketById(Long ticketId);
     public Ticket updateTicket(Long ticketId, Ticket ticket);
     Optional<Ticket> findTicketById(Long ticketId);
 
+    List<Ticket> fetchActiveTickets();
+
+    List<Ticket> fetchActiveTicketsByRegistration(String registration);
 }

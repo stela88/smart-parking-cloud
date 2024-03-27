@@ -29,7 +29,7 @@ class TransactionRepositoryTest {
         Transaction transaction =
                 Transaction.builder()
                         .amount(totalPrice)
-                        .created(timeOfCreating)
+                        .createdTs(timeOfCreating)
                         .build();
 
         transactionRepository.save(transaction);
@@ -41,14 +41,13 @@ class TransactionRepositoryTest {
                 .registration("zg556pl")
                 .timeOfEnter(timeOfCreating)
                 .timeOfExit(timeOfExit)
-                .created(true)
+                .createdTs(timeOfCreating)
                 .price(totalPrice)
                 .build();
 
         Transaction transaction = Transaction.builder()
-                .created(timeOfCreating)
                 .amount(totalPrice)
-                .modified(timeOfCreating)
+                .modifiedTs(timeOfCreating)
                 .ticket(ticket)
                 .build();
 
