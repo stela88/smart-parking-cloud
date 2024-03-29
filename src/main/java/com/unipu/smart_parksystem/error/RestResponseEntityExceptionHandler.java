@@ -1,5 +1,7 @@
 package com.unipu.smart_parksystem.error;
 import com.unipu.smart_parksystem.entity.ErrorMessage;
+import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
+import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,6 +17,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(TicketNotFoundException.class)
     public ResponseEntity<ErrorMessage> ticketNotFoundException(TicketNotFoundException exception,
+                                                                WebRequest request) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND,
+                exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(message);
+
+    }
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<ErrorMessage> TransactionNotFoundException(TransactionNotFoundException exception,
                                                                 WebRequest request) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND,
                 exception.getMessage());

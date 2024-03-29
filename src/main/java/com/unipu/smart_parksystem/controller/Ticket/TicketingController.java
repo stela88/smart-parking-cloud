@@ -1,7 +1,8 @@
-package com.unipu.smart_parksystem.controller;
+package com.unipu.smart_parksystem.controller.Ticket;
+import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.entity.Ticket;
-import com.unipu.smart_parksystem.error.TicketNotFoundException;
-import com.unipu.smart_parksystem.service.TicketingService;
+import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
+import com.unipu.smart_parksystem.service.Ticket.TicketingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class TicketingController {
     }
 
     @GetMapping("/tickets")
-    public List<Ticket> fetchTicketList() {
+    public List<TicketDto> fetchTicketList() {
         LOGGER.info("Inside fetchTicketList of TicketingController");
         return ticketingService.fetchTicketList();
     }
@@ -36,7 +37,7 @@ public class TicketingController {
     }
 
     @GetMapping("/tickets/{id}")
-    public Ticket fetchTicketById(@PathVariable("id") Long ticketId)
+    public TicketDto fetchTicketById(@PathVariable("id") Long ticketId)
     throws TicketNotFoundException {
         return ticketingService.fetchTicketById(ticketId);
     }
@@ -48,8 +49,8 @@ public class TicketingController {
     }
 
     @PutMapping("/tickets/{id}")
-    public Ticket updateTicket(@PathVariable("id") Long ticketId,
-                               @RequestBody Ticket ticket){
+    public TicketDto updateTicket(@PathVariable("id") Long ticketId,
+                               @RequestBody TicketDto ticket) throws TicketNotFoundException {
         return ticketingService.updateTicket(ticketId,ticket);
     }
 

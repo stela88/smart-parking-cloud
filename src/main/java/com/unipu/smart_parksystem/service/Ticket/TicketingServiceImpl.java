@@ -1,33 +1,43 @@
-package com.unipu.smart_parksystem.service;
+package com.unipu.smart_parksystem.service.Ticket;
 
+import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.entity.Ticket;
-import com.unipu.smart_parksystem.error.TicketNotFoundException;
-import com.unipu.smart_parksystem.repository.TicketRepository;
+import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
+import com.unipu.smart_parksystem.mapper.TicketMapper;
+import com.unipu.smart_parksystem.repository.Ticket.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class TicketingServiceImpl implements TicketingService{
+public class TicketingServiceImpl implements TicketingService {
 
     @Autowired
     private TicketRepository ticketRepository;
 
-
     @Override
+    @Transactional
     public Ticket saveTicket(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
 
     @Override
-    public List<Ticket> fetchTicketList(){
-        return ticketRepository.findAll();
+    public List<TicketDto> fetchTicketList() {
+        List<Ticket> tickets = ticketRepository.findAll();
+        List<TicketDto> ticketDtoList = new ArrayList<>();
+        for(Ticket ticket:tickets) {
+            TicketDto ticketDto = TicketMapper.convertEntityToDto(ticket);
+            ticketDtoList.add(ticketDto);
+        }
+        return ticketDtoList;
     }
+
 
     @Override
     public Ticket fetchTicketByRegistration(String registration) {
@@ -36,15 +46,15 @@ public class TicketingServiceImpl implements TicketingService{
 
 
     @Override
-    public Ticket fetchTicketById(Long ticketId) throws TicketNotFoundException{
+    public TicketDto fetchTicketById(Long ticketId) throws TicketNotFoundException {
         Optional<Ticket> ticket =
                 ticketRepository.findById(ticketId);
 
-        if(!ticket.isPresent()) {
+        if (!ticket.isPresent()) {
             throw new TicketNotFoundException("Ticket Not Available");
         }
 
-        return  ticket.get();
+        return TicketMapper.convertEntityToDto(ticket.get());
     }
 
     @Override
@@ -53,46 +63,42 @@ public class TicketingServiceImpl implements TicketingService{
     }
 
 
-    @Override
-    public Ticket updateTicket(Long ticketId, Ticket ticket) {
-        Ticket ticketDB = ticketRepository.findById(ticketId).get();
 
-        if(Objects.nonNull(ticket.getRegistration()) &&
-                !"".equalsIgnoreCase(ticket.getRegistration())) {
+    @Override
+    @Transactional
+    public TicketDto updateTicket(Long ticketId, TicketDto ticket) throws TicketNotFoundException {
+        Optional<Ticket> ticketOptional = ticketRepository.findById(ticketId);
+        if (ticketOptional.isEmpty()) {
+            throw new TicketNotFoundException("Ticket not found");
+        }
+
+        Ticket ticketDB = ticketOptional.get();
+
+        if (Objects.nonNull(ticket.getRegistration())) {
             ticketDB.setRegistration(ticket.getRegistration());
         }
-
-        if(Objects.nonNull(ticket.getTimeOfEnter())){
+        if (Objects.nonNull(ticket.getTimeOfEnter())) {
             ticketDB.setTimeOfEnter(ticket.getTimeOfEnter());
         }
-
-        if(Objects.isNull(ticket.getTimeOfExit())){
+        if (Objects.nonNull(ticket.getTimeOfExit())) {
             ticketDB.setTimeOfExit(ticket.getTimeOfExit());
         }
-
-        if(Objects.isNull(ticket.getPrice())){
+        if (Objects.nonNull(ticket.getPrice())) {
             ticketDB.setPrice(ticket.getPrice());
         }
-
-        if(Objects.nonNull(ticket.getExitTimeout())){
+        if (Objects.nonNull(ticket.getExitTimeout())) {
             ticketDB.setExitTimeout(ticket.getExitTimeout());
         }
-
-        if(Objects.isNull(ticket.getCreatedTs())){
+        if (Objects.nonNull(ticket.getCreatedTs())) {
             ticketDB.setCreatedTs(ticket.getCreatedTs());
         }
-
-        if(Objects.isNull(ticket.getModifiedTs())){
+        if (Objects.nonNull(ticket.getModifiedTs())) {
             ticketDB.setModifiedTs(ticket.getModifiedTs());
         }
 
-        return ticketRepository.save(ticketDB);
+        return TicketMapper.convertEntityToDto(ticketRepository.save(ticketDB));
     }
 
-    @Override
-    public Optional<Ticket> findTicketById(Long ticketId) {
-        return ticketRepository.findById(ticketId);
-    }
 
     @Override
     public List<Ticket> fetchActiveTickets() {

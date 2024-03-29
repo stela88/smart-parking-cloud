@@ -1,4 +1,4 @@
-package com.unipu.smart_parksystem.error;
+package com.unipu.smart_parksystem.error.Ticket;
 
 public class TicketNotFoundException extends Exception{
 

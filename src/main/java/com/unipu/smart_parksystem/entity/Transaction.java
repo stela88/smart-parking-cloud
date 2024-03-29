@@ -41,8 +41,4 @@ public class Transaction {
     )
     private Ticket ticket;
 
-
-
-
-
 }

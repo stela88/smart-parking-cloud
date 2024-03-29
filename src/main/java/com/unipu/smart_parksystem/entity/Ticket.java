@@ -1,5 +1,6 @@
 package com.unipu.smart_parksystem.entity;
 
+import com.unipu.smart_parksystem.dto.TicketDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

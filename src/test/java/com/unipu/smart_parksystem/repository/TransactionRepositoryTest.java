@@ -2,6 +2,7 @@ package com.unipu.smart_parksystem.repository;
 
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.entity.Transaction;
+import com.unipu.smart_parksystem.repository.Transaction.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
