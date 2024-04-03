@@ -1,6 +1,8 @@
 package com.unipu.smart_parksystem.dto;
 
+import com.unipu.smart_parksystem.entity.Transaction;
 import lombok.*;
+
 
 import java.math.BigDecimal;
 import java.time.Instant;

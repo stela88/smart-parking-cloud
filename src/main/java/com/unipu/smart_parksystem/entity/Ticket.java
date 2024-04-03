@@ -1,6 +1,5 @@
 package com.unipu.smart_parksystem.entity;
 
-import com.unipu.smart_parksystem.dto.TicketDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Data
@@ -38,6 +38,7 @@ public class Ticket {
     private Instant exitTimeout;
     private Instant createdTs;
     private Instant modifiedTs;
+
 
 
 }

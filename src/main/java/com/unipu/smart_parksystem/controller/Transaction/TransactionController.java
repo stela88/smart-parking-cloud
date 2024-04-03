@@ -25,7 +25,7 @@ public class TransactionController {
             LoggerFactory.getLogger(TransactionController.class);
 
     @PostMapping("/transactions")
-    public Transaction saveTransaction(@RequestBody Transaction transaction){
+    public TransactionDto saveTransaction(@RequestBody TransactionDto transaction){
         LOGGER.info("Inside saveTransaction od TransactionController");
 
         return transactionService.saveTransaction(transaction);

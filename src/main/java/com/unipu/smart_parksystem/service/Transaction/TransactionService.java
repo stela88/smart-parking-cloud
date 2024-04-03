@@ -12,7 +12,9 @@ import java.util.Optional;
 
 public interface TransactionService {
 
-    Transaction saveTransaction(Transaction transaction);
+
+    @Transactional
+    TransactionDto saveTransaction(TransactionDto transactionDto);
     public List<TransactionDto> fetchTransactionList();
     public TransactionDto fetchTransactionById(Long transactionId) throws TransactionNotFoundException;
     public void deleteTransactiontById(Long transactionId);
