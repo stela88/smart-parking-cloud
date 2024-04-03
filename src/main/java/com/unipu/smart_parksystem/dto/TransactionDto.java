@@ -1,7 +1,5 @@
 package com.unipu.smart_parksystem.dto;
 
-import com.unipu.smart_parksystem.entity.Ticket;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -10,13 +8,13 @@ public class TransactionDto {
     private BigDecimal amount;
     private Instant createdTs;
     private Instant modifiedTs;
-    private Ticket ticket;
+    private TicketDto ticket;
 
-    public Ticket getTicket(){
+    public TicketDto getTicket() {
         return ticket;
     }
 
-    public void setTicket(Ticket ticket) {
+    public void setTicket(TicketDto ticket) {
         this.ticket = ticket;
     }
 

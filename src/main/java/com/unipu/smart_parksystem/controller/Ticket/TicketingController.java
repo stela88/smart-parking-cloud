@@ -1,4 +1,5 @@
 package com.unipu.smart_parksystem.controller.Ticket;
+
 import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
@@ -20,9 +21,12 @@ public class TicketingController {
             LoggerFactory.getLogger(TicketingController.class);
 
     @PostMapping("/tickets")
-    public Ticket saveTicket(@RequestBody Ticket ticket) {
+    public Ticket saveTicket(@RequestBody TicketDto ticket) {
         LOGGER.info("Inside saveTicket of TicketingController");
-        return ticketingService.saveTicket(ticket);
+        if (ticket.getRegistration() == null) {
+            throw new IllegalArgumentException("Missing registration");
+        }
+        return ticketingService.saveTicket(ticket.getRegistration());
     }
 
     @GetMapping("/tickets")
@@ -32,26 +36,26 @@ public class TicketingController {
     }
 
     @GetMapping("/tickets/registration/{registration}")
-    public Ticket fetchTicketByRegistration(@PathVariable("registration") String registration){
+    public Ticket fetchTicketByRegistration(@PathVariable("registration") String registration) {
         return ticketingService.fetchTicketByRegistration(registration);
     }
 
     @GetMapping("/tickets/{id}")
     public TicketDto fetchTicketById(@PathVariable("id") Long ticketId)
-    throws TicketNotFoundException {
+            throws TicketNotFoundException {
         return ticketingService.fetchTicketById(ticketId);
     }
 
     @DeleteMapping("/tickets/{id}")
-    public String deleteTicketById(@PathVariable("id") Long ticketId){
+    public String deleteTicketById(@PathVariable("id") Long ticketId) {
         ticketingService.deleteTicketById(ticketId);
         return "Ticket deleted successfully";
     }
 
     @PutMapping("/tickets/{id}")
     public TicketDto updateTicket(@PathVariable("id") Long ticketId,
-                               @RequestBody TicketDto ticket) throws TicketNotFoundException {
-        return ticketingService.updateTicket(ticketId,ticket);
+                                  @RequestBody TicketDto ticket) throws TicketNotFoundException {
+        return ticketingService.updateTicket(ticketId, ticket);
     }
 
     @GetMapping("/tickets/active")

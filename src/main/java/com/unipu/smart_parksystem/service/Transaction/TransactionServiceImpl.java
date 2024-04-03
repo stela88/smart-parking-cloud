@@ -1,10 +1,10 @@
 package com.unipu.smart_parksystem.service.Transaction;
 
+import com.unipu.smart_parksystem.constants.Constants;
 import com.unipu.smart_parksystem.dto.TransactionDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.entity.Transaction;
 import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
-import com.unipu.smart_parksystem.mapper.TicketMapper;
 import com.unipu.smart_parksystem.mapper.TransactionMapper;
 import com.unipu.smart_parksystem.repository.Ticket.TicketRepository;
 import com.unipu.smart_parksystem.repository.Transaction.TransactionRepository;
@@ -12,49 +12,84 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class TransactionServiceImpl implements TransactionService{
+public class TransactionServiceImpl implements TransactionService {
+    private final TransactionRepository transactionRepository;
+    private final TicketRepository ticketRepository;
+
 
     @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private TicketRepository ticketRepository;
-
+    public TransactionServiceImpl(TransactionRepository transactionRepository, TicketRepository ticketRepository) {
+        this.transactionRepository = transactionRepository;
+        this.ticketRepository = ticketRepository;
+    }
 
     @Override
     @Transactional
     public TransactionDto saveTransaction(TransactionDto transactionDto) {
-        Optional<Ticket> ticketOptional = ticketRepository.findById(transactionDto.getTicket().getTicketId());
+        Ticket ticket = ticketRepository.findById(transactionDto.getTicket().getTicketId())
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Ticket doesn't exist")
+                );
 
-        // Check if the ticket exists
-        if (ticketOptional.isPresent()) {
-            Transaction transaction = new Transaction();
-            transaction.setAmount(transactionDto.getAmount());
-            transaction.setTicket(ticketOptional.get());
-            Instant now = Instant.now();
-            transaction.setCreatedTs(now);
-            transaction.setModifiedTs(now);
+        Instant now = Instant.now();
 
-            // Save the transaction
-            Transaction savedTransaction = transactionRepository.save(transaction);
+        // todo simplified example of the solution above
+//        Optional<String> val = Optional.of("blah");
+//        if (val.isEmpty()) {
+//            throw new IllegalArgumentException("Blah doesn't exist");
+//        }
+//        String realVal = val.get();
 
-            return TransactionMapper.convertEntityToDto(savedTransaction);
+        Instant exitTimeout = ticket.getExitTimeout();
+        long hoursToPay = hoursToPay(exitTimeout.minus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES), now);
+
+        if (hoursToPay < 0) {
+            throw new IllegalArgumentException("Can't pay before timeout time outs");
         }
 
-        return null; 
+        BigDecimal amountToPay = BigDecimal.valueOf(Constants.PRICE_PER_HOUR * hoursToPay);
+        BigDecimal paidAmount = transactionDto.getAmount();
+
+        if (paidAmount.compareTo(amountToPay) != 0) {
+            throw new IllegalArgumentException("Invalid amount paid, you need to pay: " + amountToPay);
+        }
+
+        ticket.setExitTimeout(exitTimeout.plus(hoursToPay, ChronoUnit.HOURS));
+        ticket = ticketRepository.saveAndFlush(ticket);
+
+        Transaction transaction = Transaction.builder()
+                .ticket(ticket)
+                .amount(paidAmount)
+                .createdTs(now)
+                .build();
+        transaction = transactionRepository.saveAndFlush(transaction);
+        return TransactionMapper.convertEntityToDto(transaction);
+    }
+
+    private long hoursToPay(Instant start, Instant end) {
+        long minutesBetween = ChronoUnit.MINUTES.between(start, end);
+
+        long hoursBetween = (minutesBetween / 60);
+        if ((minutesBetween % 60) > 0) {
+            return ++hoursBetween;
+        }
+        return hoursBetween;
     }
 
     @Override
-    public List<TransactionDto> fetchTransactionList(){
+    public List<TransactionDto> fetchTransactionList() {
         List<Transaction> transactions = transactionRepository.findAll();
         List<TransactionDto> transactionDtoList = new ArrayList<>();
-        for(Transaction transaction:transactions){
+        for (Transaction transaction : transactions) {
             TransactionDto transactionDto = TransactionMapper.convertEntityToDto(transaction);
             transactionDtoList.add(transactionDto);
         }
@@ -67,11 +102,11 @@ public class TransactionServiceImpl implements TransactionService{
         Optional<Transaction> transaction =
                 transactionRepository.findById(transactionId);
 
-        if(!transaction.isPresent()) {
+        if (!transaction.isPresent()) {
             throw new TransactionNotFoundException("Transaction Not Available");
         }
 
-        return  TransactionMapper.convertEntityToDto(transaction.get());
+        return TransactionMapper.convertEntityToDto(transaction.get());
     }
 
     @Override
@@ -83,42 +118,29 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     public TransactionDto updateTransaction(Long transactionId, Transaction transaction) throws TransactionNotFoundException {
         Optional<Transaction> transactionOptional = transactionRepository.findById(transactionId);
-        if(transactionOptional.isEmpty()){
+        if (transactionOptional.isEmpty()) {
             throw new TransactionNotFoundException("Transaction not found");
         }
 
         Transaction transactionDB = transactionOptional.get();
 
 
-        if(Objects.nonNull(transaction.getAmount())){
+        if (Objects.nonNull(transaction.getAmount())) {
             transactionDB.setAmount(transaction.getAmount());
         }
 
-        if(Objects.nonNull(transaction.getTicket())){
+        if (Objects.nonNull(transaction.getTicket())) {
             transactionDB.setTicket(transaction.getTicket());
         }
 
-        if(Objects.isNull(transaction.getCreatedTs())){
+        if (Objects.isNull(transaction.getCreatedTs())) {
             transactionDB.setCreatedTs(transaction.getCreatedTs());
         }
 
-        if(Objects.isNull(transaction.getModifiedTs())){
+        if (Objects.isNull(transaction.getModifiedTs())) {
             transactionDB.setModifiedTs(transaction.getModifiedTs());
         }
 
         return TransactionMapper.convertEntityToDto(transactionRepository.save(transactionDB));
-    }
-
-
-    @Transactional
-    public Transaction create(/*String registration*/) {
-        Instant now = Instant.now();
-        Transaction transaction = Transaction.builder()
-                .amount(null)
-                .createdTs(null)
-                .modifiedTs(null)
-                .ticket(null)
-                .build();
-        return transactionRepository.save(transaction);
     }
 }

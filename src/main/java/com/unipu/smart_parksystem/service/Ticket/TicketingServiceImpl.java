@@ -1,5 +1,6 @@
 package com.unipu.smart_parksystem.service.Ticket;
 
+import com.unipu.smart_parksystem.constants.Constants;
 import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,20 +20,45 @@ import java.util.Optional;
 @Service
 public class TicketingServiceImpl implements TicketingService {
 
+
+    private final TicketRepository ticketRepository;
+
     @Autowired
-    private TicketRepository ticketRepository;
+    public TicketingServiceImpl(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
+    }
 
     @Override
     @Transactional
-    public Ticket saveTicket(Ticket ticket) {
-        return ticketRepository.save(ticket);
+    public Ticket saveTicket(String registration) {
+        Instant now = Instant.now();
+        Instant exitTimeout = now.plus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES);
+
+        List<Ticket> activeTickets = ticketRepository.findByRegistrationAndTimeOfExitIsNullAndTimeOfEnterIsNotNull(registration);
+        if (!activeTickets.isEmpty()) {
+            throw new IllegalArgumentException("Already have active registrations");
+        }
+
+        List<Ticket> allActiveTickets = ticketRepository.findByTimeOfExitIsNull();
+        if (allActiveTickets.size() >= Constants.GARAGE_CAPACITY) {
+            throw new IllegalArgumentException("Garage capacity is full");
+        }
+
+        Ticket activeTicket = Ticket.builder()
+                .timeOfEnter(now)
+                .exitTimeout(exitTimeout)
+                .registration(registration)
+                .createdTs(now)
+                .build();
+
+        return ticketRepository.save(activeTicket);
     }
 
     @Override
     public List<TicketDto> fetchTicketList() {
         List<Ticket> tickets = ticketRepository.findAll();
         List<TicketDto> ticketDtoList = new ArrayList<>();
-        for(Ticket ticket:tickets) {
+        for (Ticket ticket : tickets) {
             TicketDto ticketDto = TicketMapper.convertEntityToDto(ticket);
             ticketDtoList.add(ticketDto);
         }
@@ -61,7 +88,6 @@ public class TicketingServiceImpl implements TicketingService {
     public void deleteTicketById(Long ticketId) {
         ticketRepository.deleteById(ticketId);
     }
-
 
 
     @Override

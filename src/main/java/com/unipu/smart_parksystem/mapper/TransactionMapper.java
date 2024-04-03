@@ -10,7 +10,7 @@ public class TransactionMapper {
         transactionDto.setAmount(transaction.getAmount());
         transactionDto.setCreatedTs(transaction.getCreatedTs());
         transactionDto.setModifiedTs(transaction.getModifiedTs());
-        transactionDto.setTicket(transaction.getTicket());
+        transactionDto.setTicket(TicketMapper.convertEntityToDto(transaction.getTicket()));
         return transactionDto;
 
     }

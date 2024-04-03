@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TicketingService {
 
-    public Ticket saveTicket(Ticket ticket);
+    public Ticket saveTicket(String registration);
     public List<TicketDto> fetchTicketList();
     Ticket fetchTicketByRegistration(String registration);
     public TicketDto fetchTicketById(Long ticketId) throws TicketNotFoundException;
