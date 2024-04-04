@@ -4,12 +4,14 @@ import com.unipu.smart_parksystem.constants.Constants;
 import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
+import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
 import com.unipu.smart_parksystem.mapper.TicketMapper;
 import com.unipu.smart_parksystem.repository.Ticket.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -133,6 +135,16 @@ public class TicketingServiceImpl implements TicketingService {
 
     public List<Ticket> fetchActiveTicketsByRegistration(String registration) {
         return ticketRepository.findByRegistrationAndTimeOfExitIsNullAndTimeOfEnterIsNotNull(registration);
+    }
+
+    @Override
+    public BigDecimal fetchTicketPriceByRegistration(String registration) {
+        Ticket ticket = ticketRepository.findByRegistrationIgnoreCase(registration);
+        if (ticket != null) {
+            return ticket.getPrice();
+        } else {
+            throw new IllegalArgumentException("Ticket not found");
+        }
     }
 
 

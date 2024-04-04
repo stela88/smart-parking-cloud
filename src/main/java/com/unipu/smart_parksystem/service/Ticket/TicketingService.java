@@ -5,6 +5,7 @@ import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface TicketingService {
@@ -18,4 +19,6 @@ public interface TicketingService {
     TicketDto updateTicket(Long ticketId, TicketDto ticket) throws TicketNotFoundException;
     List<Ticket> fetchActiveTickets();
     List<Ticket> fetchActiveTicketsByRegistration(String registration);
+    public BigDecimal fetchTicketPriceByRegistration(String registration);
+
 }

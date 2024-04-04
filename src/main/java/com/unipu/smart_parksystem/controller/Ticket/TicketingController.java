@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController()
@@ -68,6 +69,11 @@ public class TicketingController {
     public List<Ticket> fetchActiveTicketsByRegistration(@PathVariable("registration") String registration) {
         LOGGER.info("Inside fetchActiveTicketsByRegistration of TicketingController");
         return ticketingService.fetchActiveTicketsByRegistration(registration);
+    }
+
+    @GetMapping("/tickets/registration/{registration}/price")
+    public BigDecimal fetchTicketPriceByRegistration(@PathVariable("registration") String registration){
+        return ticketingService.fetchTicketPriceByRegistration(registration);
     }
 
 
