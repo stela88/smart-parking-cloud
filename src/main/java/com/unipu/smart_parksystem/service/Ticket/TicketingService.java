@@ -10,15 +10,14 @@ import java.util.List;
 
 public interface TicketingService {
 
-    public Ticket saveTicket(String registration);
-    public List<TicketDto> fetchTicketList();
+    TicketDto saveTicket(String registration);
+    List<TicketDto> fetchTicketList();
     Ticket fetchTicketByRegistration(String registration);
-    public TicketDto fetchTicketById(Long ticketId) throws TicketNotFoundException;
-    public void deleteTicketById(Long ticketId);
+    TicketDto fetchTicketById(Long ticketId) throws TicketNotFoundException;
+    void deleteTicketById(Long ticketId);
     @Transactional
     TicketDto updateTicket(Long ticketId, TicketDto ticket) throws TicketNotFoundException;
     List<Ticket> fetchActiveTickets();
     List<Ticket> fetchActiveTicketsByRegistration(String registration);
-    public BigDecimal fetchTicketPriceByRegistration(String registration);
 
 }

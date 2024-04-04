@@ -33,7 +33,6 @@ public class Ticket {
     // todo -> must be not null in db
     private Instant timeOfEnter;
     private Instant timeOfExit;
-    private BigDecimal price;
     // todo -> must be not null in db
     private Instant exitTimeout;
     private Instant createdTs;

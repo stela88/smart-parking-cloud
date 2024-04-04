@@ -32,7 +32,7 @@ public class TicketingServiceImpl implements TicketingService {
 
     @Override
     @Transactional
-    public Ticket saveTicket(String registration) {
+    public TicketDto saveTicket(String registration) {
         Instant now = Instant.now();
         Instant exitTimeout = now.plus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES);
 
@@ -46,6 +46,7 @@ public class TicketingServiceImpl implements TicketingService {
             throw new IllegalArgumentException("Garage capacity is full");
         }
 
+
         Ticket activeTicket = Ticket.builder()
                 .timeOfEnter(now)
                 .exitTimeout(exitTimeout)
@@ -53,7 +54,7 @@ public class TicketingServiceImpl implements TicketingService {
                 .createdTs(now)
                 .build();
 
-        return ticketRepository.save(activeTicket);
+        return TicketMapper.convertEntityToDto(ticketRepository.save(activeTicket));
     }
 
     @Override
@@ -111,9 +112,6 @@ public class TicketingServiceImpl implements TicketingService {
         if (Objects.nonNull(ticket.getTimeOfExit())) {
             ticketDB.setTimeOfExit(ticket.getTimeOfExit());
         }
-        if (Objects.nonNull(ticket.getPrice())) {
-            ticketDB.setPrice(ticket.getPrice());
-        }
         if (Objects.nonNull(ticket.getExitTimeout())) {
             ticketDB.setExitTimeout(ticket.getExitTimeout());
         }
@@ -137,15 +135,6 @@ public class TicketingServiceImpl implements TicketingService {
         return ticketRepository.findByRegistrationAndTimeOfExitIsNullAndTimeOfEnterIsNotNull(registration);
     }
 
-    @Override
-    public BigDecimal fetchTicketPriceByRegistration(String registration) {
-        Ticket ticket = ticketRepository.findByRegistrationIgnoreCase(registration);
-        if (ticket != null) {
-            return ticket.getPrice();
-        } else {
-            throw new IllegalArgumentException("Ticket not found");
-        }
-    }
 
 
     @Transactional
@@ -153,7 +142,6 @@ public class TicketingServiceImpl implements TicketingService {
         Instant now = Instant.now();
         Ticket ticket = Ticket.builder()
                 .registration(registration)
-                .price(null)
                 .build();
         return ticketRepository.save(ticket);
     }

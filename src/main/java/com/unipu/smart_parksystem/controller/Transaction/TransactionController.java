@@ -1,5 +1,6 @@
 package com.unipu.smart_parksystem.controller.Transaction;
 
+import com.unipu.smart_parksystem.dto.PriceDto;
 import com.unipu.smart_parksystem.dto.TransactionDto;
 import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
 import com.unipu.smart_parksystem.service.Ticket.TicketingService;

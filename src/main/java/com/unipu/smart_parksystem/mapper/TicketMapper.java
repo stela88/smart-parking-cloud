@@ -11,7 +11,6 @@ public class TicketMapper {
         ticketDto.setRegistration(ticket.getRegistration());
         ticketDto.setTimeOfEnter(ticket.getTimeOfEnter());
         ticketDto.setTimeOfExit(ticket.getTimeOfExit());
-        ticketDto.setPrice(ticket.getPrice());
         ticketDto.setCreatedTs(ticket.getCreatedTs());
         ticketDto.setModifiedTs(ticket.getModifiedTs());
         return ticketDto;

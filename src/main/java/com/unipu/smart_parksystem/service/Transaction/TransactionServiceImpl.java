@@ -40,6 +40,7 @@ public class TransactionServiceImpl implements TransactionService {
                         () -> new IllegalArgumentException("Ticket doesn't exist")
                 );
 
+
         Instant now = Instant.now();
 
         // todo simplified example of the solution above
@@ -50,14 +51,14 @@ public class TransactionServiceImpl implements TransactionService {
 //        String realVal = val.get();
 
         Instant exitTimeout = ticket.getExitTimeout();
-        long hoursToPay = hoursToPay(exitTimeout.minus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES), now);
 
-        if (hoursToPay < 0) {
-            throw new IllegalArgumentException("Can't pay before timeout time outs");
-        }
-
-        BigDecimal amountToPay = BigDecimal.valueOf(Constants.PRICE_PER_HOUR * hoursToPay);
         BigDecimal paidAmount = transactionDto.getAmount();
+        //------------------------------------------ plaćanje
+        long hoursToPay = hoursToPay(exitTimeout.minus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES), now);
+        BigDecimal amountToPay = getAmountToPay(hoursToPay);
+        //------------------------------------------ vrijeme do kad mozes ostati u garazi pod uvjetom da platis sad, tj vrijeme do kad moras platiti
+        Instant timeUntil = exitTimeout.minus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES).plus(hoursToPay, ChronoUnit.HOURS);
+        //------------------------------------------
 
         if (paidAmount.compareTo(amountToPay) != 0) {
             throw new IllegalArgumentException("Invalid amount paid, you need to pay: " + amountToPay);
@@ -71,7 +72,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .amount(paidAmount)
                 .createdTs(now)
                 .build();
-        transaction = transactionRepository.saveAndFlush(transaction);
+        transaction = transactionRepository.save(transaction);
         return TransactionMapper.convertEntityToDto(transaction);
     }
 
@@ -83,6 +84,16 @@ public class TransactionServiceImpl implements TransactionService {
             return ++hoursBetween;
         }
         return hoursBetween;
+    }
+
+
+    private BigDecimal getAmountToPay(long hoursToPay) {
+
+        if (hoursToPay < 0) {
+            throw new IllegalArgumentException("Can't pay before timeout time outs");
+        }
+
+        return BigDecimal.valueOf(Constants.PRICE_PER_HOUR * hoursToPay);
     }
 
     @Override
@@ -143,4 +154,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         return TransactionMapper.convertEntityToDto(transactionRepository.save(transactionDB));
     }
+
+
 }

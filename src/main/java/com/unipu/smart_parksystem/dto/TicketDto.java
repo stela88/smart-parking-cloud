@@ -1,12 +1,8 @@
 package com.unipu.smart_parksystem.dto;
 
-import com.unipu.smart_parksystem.entity.Transaction;
 import lombok.*;
 
-
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +16,6 @@ public class TicketDto {
     // todo -> must be not null in db
     private Instant timeOfEnter;
     private Instant timeOfExit;
-    private BigDecimal price;
     // todo -> must be not null in db
     private Instant exitTimeout;
     private Instant createdTs;
@@ -58,13 +53,6 @@ public class TicketDto {
         this.timeOfExit = timeOfExit;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 
     public Instant getExitTimeout() {
         return exitTimeout;

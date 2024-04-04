@@ -22,7 +22,7 @@ public class TicketingController {
             LoggerFactory.getLogger(TicketingController.class);
 
     @PostMapping("/tickets")
-    public Ticket saveTicket(@RequestBody TicketDto ticket) {
+    public TicketDto saveTicket(@RequestBody TicketDto ticket) {
         LOGGER.info("Inside saveTicket of TicketingController");
         if (ticket.getRegistration() == null) {
             throw new IllegalArgumentException("Missing registration");
@@ -71,10 +71,6 @@ public class TicketingController {
         return ticketingService.fetchActiveTicketsByRegistration(registration);
     }
 
-    @GetMapping("/tickets/registration/{registration}/price")
-    public BigDecimal fetchTicketPriceByRegistration(@PathVariable("registration") String registration){
-        return ticketingService.fetchTicketPriceByRegistration(registration);
-    }
 
 
 }
