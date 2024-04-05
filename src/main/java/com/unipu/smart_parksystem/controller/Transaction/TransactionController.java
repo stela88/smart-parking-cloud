@@ -1,6 +1,5 @@
 package com.unipu.smart_parksystem.controller.Transaction;
 
-import com.unipu.smart_parksystem.dto.PriceDto;
 import com.unipu.smart_parksystem.dto.TransactionDto;
 import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
 import com.unipu.smart_parksystem.service.Ticket.TicketingService;
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 
 

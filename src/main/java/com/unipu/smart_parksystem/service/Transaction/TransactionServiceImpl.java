@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.unipu.smart_parksystem.util.TicketingUtil.getAmountToPay;
+import static com.unipu.smart_parksystem.util.TicketingUtil.hoursToPay;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
@@ -43,21 +46,11 @@ public class TransactionServiceImpl implements TransactionService {
 
         Instant now = Instant.now();
 
-        // todo simplified example of the solution above
-//        Optional<String> val = Optional.of("blah");
-//        if (val.isEmpty()) {
-//            throw new IllegalArgumentException("Blah doesn't exist");
-//        }
-//        String realVal = val.get();
-
         Instant exitTimeout = ticket.getExitTimeout();
-
         BigDecimal paidAmount = transactionDto.getAmount();
         //------------------------------------------ plaćanje
         long hoursToPay = hoursToPay(exitTimeout.minus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES), now);
         BigDecimal amountToPay = getAmountToPay(hoursToPay);
-        //------------------------------------------ vrijeme do kad mozes ostati u garazi pod uvjetom da platis sad, tj vrijeme do kad moras platiti
-        Instant timeUntil = exitTimeout.minus(Constants.MINUTES_FOR_TIMEOUT, ChronoUnit.MINUTES).plus(hoursToPay, ChronoUnit.HOURS);
         //------------------------------------------
 
         if (paidAmount.compareTo(amountToPay) != 0) {
@@ -76,25 +69,9 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionMapper.convertEntityToDto(transaction);
     }
 
-    private long hoursToPay(Instant start, Instant end) {
-        long minutesBetween = ChronoUnit.MINUTES.between(start, end);
-
-        long hoursBetween = (minutesBetween / 60);
-        if ((minutesBetween % 60) > 0) {
-            return ++hoursBetween;
-        }
-        return hoursBetween;
-    }
 
 
-    private BigDecimal getAmountToPay(long hoursToPay) {
 
-        if (hoursToPay < 0) {
-            throw new IllegalArgumentException("Can't pay before timeout time outs");
-        }
-
-        return BigDecimal.valueOf(Constants.PRICE_PER_HOUR * hoursToPay);
-    }
 
     @Override
     public List<TransactionDto> fetchTransactionList() {

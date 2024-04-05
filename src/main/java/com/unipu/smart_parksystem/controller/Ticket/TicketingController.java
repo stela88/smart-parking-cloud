@@ -1,5 +1,7 @@
 package com.unipu.smart_parksystem.controller.Ticket;
 
+import com.unipu.smart_parksystem.dto.ExitDto;
+import com.unipu.smart_parksystem.dto.ReceiptDto;
 import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
@@ -41,10 +43,26 @@ public class TicketingController {
         return ticketingService.fetchTicketByRegistration(registration);
     }
 
+    @PostMapping("/tickets/registration/{registration}/exit")
+    public ExitDto exitByRegistration(@PathVariable("registration") String registration) {
+        return ticketingService.exit(registration);
+    }
+
+    @GetMapping("/tickets/registration/{registration}/can-exit")
+    public ExitDto canExitByRegistration(@PathVariable("registration") String registration) {
+        return ticketingService.canExit(registration);
+    }
+
     @GetMapping("/tickets/{id}")
     public TicketDto fetchTicketById(@PathVariable("id") Long ticketId)
             throws TicketNotFoundException {
         return ticketingService.fetchTicketById(ticketId);
+    }
+
+    @GetMapping("/tickets/{id}/receipt")
+    public ReceiptDto fetchReceiptByTicketId(@PathVariable("id") Long ticketId)
+            throws TicketNotFoundException {
+        return ticketingService.fetchReceiptByTicketId(ticketId);
     }
 
     @DeleteMapping("/tickets/{id}")
