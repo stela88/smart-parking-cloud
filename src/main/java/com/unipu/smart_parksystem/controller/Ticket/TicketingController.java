@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController()
+
+@CrossOrigin("http://localhost:8080/")
 public class TicketingController {
 
     @Autowired
@@ -88,7 +90,5 @@ public class TicketingController {
         LOGGER.info("Inside fetchActiveTicketsByRegistration of TicketingController");
         return ticketingService.fetchActiveTicketsByRegistration(registration);
     }
-
-
 
 }

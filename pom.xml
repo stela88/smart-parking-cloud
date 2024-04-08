@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.dailycodebuffer</groupId>
-	<artifactId>spring-data-jpa-tutorial</artifactId>
+	<artifactId>smart_park-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-data-jpa-tutorial</name>
 	<description>Demo project for Spring Boot</description>
@@ -25,7 +25,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

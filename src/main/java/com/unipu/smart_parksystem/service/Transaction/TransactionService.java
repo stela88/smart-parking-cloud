@@ -11,7 +11,8 @@ public interface TransactionService {
     List<TransactionDto> fetchTransactionList();
     TransactionDto fetchTransactionById(Long transactionId) throws TransactionNotFoundException;
     void deleteTransactiontById(Long transactionId);
-    TransactionDto updateTransaction(Long transactionId, Transaction transaction) throws TransactionNotFoundException;
+
+//  TransactionDto updateTransaction(Long transactionId, TransactionDto transaction) throws TransactionNotFoundException;
 
 
 

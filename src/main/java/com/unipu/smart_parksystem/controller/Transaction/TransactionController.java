@@ -1,6 +1,7 @@
 package com.unipu.smart_parksystem.controller.Transaction;
 
 import com.unipu.smart_parksystem.dto.TransactionDto;
+import com.unipu.smart_parksystem.entity.Transaction;
 import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
 import com.unipu.smart_parksystem.service.Ticket.TicketingService;
 import com.unipu.smart_parksystem.service.Transaction.TransactionService;
@@ -40,13 +41,19 @@ public class TransactionController {
             throws TransactionNotFoundException{
         return transactionService.fetchTransactionById(transactionId);
     }
-/*
+
     @DeleteMapping("/transactions/{id}")
     public String deleteTransactionById(@PathVariable("id") Long transactionId){
         transactionService.deleteTransactiontById(transactionId);
         return "Transaction deleted successfully";
     }
 
-*/
+    /*
+    @PutMapping("/transactions/{id}")
+    public TransactionDto updateTransaction(@PathVariable("id") Long transactionId,
+                                            @RequestBody TransactionDto transaction) throws TransactionNotFoundException{
+        return transactionService.updateTransaction(transactionId,transaction);
+    }
+    */
 
 }

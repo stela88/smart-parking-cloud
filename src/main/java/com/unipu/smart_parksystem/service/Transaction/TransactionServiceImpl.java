@@ -1,6 +1,7 @@
 package com.unipu.smart_parksystem.service.Transaction;
 
 import com.unipu.smart_parksystem.constants.Constants;
+import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.dto.TransactionDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.entity.Transaction;
@@ -43,7 +44,6 @@ public class TransactionServiceImpl implements TransactionService {
                         () -> new IllegalArgumentException("Ticket doesn't exist")
                 );
 
-
         Instant now = Instant.now();
 
         Instant exitTimeout = ticket.getExitTimeout();
@@ -69,10 +69,6 @@ public class TransactionServiceImpl implements TransactionService {
         return TransactionMapper.convertEntityToDto(transaction);
     }
 
-
-
-
-
     @Override
     public List<TransactionDto> fetchTransactionList() {
         List<Transaction> transactions = transactionRepository.findAll();
@@ -83,7 +79,6 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return transactionDtoList;
     }
-
 
     @Override
     public TransactionDto fetchTransactionById(Long transactionId) throws TransactionNotFoundException {
@@ -102,9 +97,9 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.deleteById(transactionId);
     }
 
-
+    /*
     @Override
-    public TransactionDto updateTransaction(Long transactionId, Transaction transaction) throws TransactionNotFoundException {
+    public TransactionDto updateTransaction(Long transactionId, TransactionDto transaction) throws TransactionNotFoundException {
         Optional<Transaction> transactionOptional = transactionRepository.findById(transactionId);
         if (transactionOptional.isEmpty()) {
             throw new TransactionNotFoundException("Transaction not found");
@@ -131,6 +126,5 @@ public class TransactionServiceImpl implements TransactionService {
 
         return TransactionMapper.convertEntityToDto(transactionRepository.save(transactionDB));
     }
-
-
+     */
 }

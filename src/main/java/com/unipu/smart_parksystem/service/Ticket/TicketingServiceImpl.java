@@ -6,12 +6,10 @@ import com.unipu.smart_parksystem.dto.ReceiptDto;
 import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.error.Ticket.TicketNotFoundException;
-import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
 import com.unipu.smart_parksystem.mapper.TicketMapper;
 import com.unipu.smart_parksystem.repository.Ticket.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -26,7 +24,6 @@ import static com.unipu.smart_parksystem.util.TicketingUtil.hoursToPay;
 
 @Service
 public class TicketingServiceImpl implements TicketingService {
-
 
     private final TicketRepository ticketRepository;
 
@@ -51,6 +48,9 @@ public class TicketingServiceImpl implements TicketingService {
             throw new IllegalArgumentException("Garage capacity is full");
         }
 
+        if(registration.isEmpty()){
+            throw  new IllegalArgumentException("Registration can not be null");
+        }
 
         Ticket activeTicket = Ticket.builder()
                 .timeOfEnter(now)
@@ -133,7 +133,6 @@ public class TicketingServiceImpl implements TicketingService {
         return ticketRepository.findByRegistrationIgnoreCase(registration);
     }
 
-
     @Override
     public TicketDto fetchTicketById(Long ticketId) {
         Optional<Ticket> ticket =
@@ -179,7 +178,6 @@ public class TicketingServiceImpl implements TicketingService {
         ticketRepository.deleteById(ticketId);
     }
 
-
     @Override
     @Transactional
     public TicketDto updateTicket(Long ticketId, TicketDto ticket) {
@@ -212,7 +210,6 @@ public class TicketingServiceImpl implements TicketingService {
         return TicketMapper.convertEntityToDto(ticketRepository.save(ticketDB));
     }
 
-
     @Override
     public List<Ticket> fetchActiveTickets() {
         return ticketRepository.findByTimeOfExitIsNull();
@@ -221,7 +218,6 @@ public class TicketingServiceImpl implements TicketingService {
     public List<Ticket> fetchActiveTicketsByRegistration(String registration) {
         return ticketRepository.findByRegistrationAndTimeOfExitIsNullAndTimeOfEnterIsNotNull(registration);
     }
-
 
     @Transactional
     public Ticket create(String registration) {
