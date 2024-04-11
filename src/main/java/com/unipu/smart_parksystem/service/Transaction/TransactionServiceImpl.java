@@ -97,34 +97,4 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.deleteById(transactionId);
     }
 
-    /*
-    @Override
-    public TransactionDto updateTransaction(Long transactionId, TransactionDto transaction) throws TransactionNotFoundException {
-        Optional<Transaction> transactionOptional = transactionRepository.findById(transactionId);
-        if (transactionOptional.isEmpty()) {
-            throw new TransactionNotFoundException("Transaction not found");
-        }
-
-        Transaction transactionDB = transactionOptional.get();
-
-
-        if (Objects.nonNull(transaction.getAmount())) {
-            transactionDB.setAmount(transaction.getAmount());
-        }
-
-        if (Objects.nonNull(transaction.getTicket())) {
-            transactionDB.setTicket(transaction.getTicket());
-        }
-
-        if (Objects.isNull(transaction.getCreatedTs())) {
-            transactionDB.setCreatedTs(transaction.getCreatedTs());
-        }
-
-        if (Objects.isNull(transaction.getModifiedTs())) {
-            transactionDB.setModifiedTs(transaction.getModifiedTs());
-        }
-
-        return TransactionMapper.convertEntityToDto(transactionRepository.save(transactionDB));
-    }
-     */
 }

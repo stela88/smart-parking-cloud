@@ -14,6 +14,8 @@ import java.util.List;
 
 
 @RestController()
+
+@CrossOrigin("http://localhost:8080/")
 public class TransactionController {
 
     @Autowired
@@ -47,13 +49,5 @@ public class TransactionController {
         transactionService.deleteTransactiontById(transactionId);
         return "Transaction deleted successfully";
     }
-
-    /*
-    @PutMapping("/transactions/{id}")
-    public TransactionDto updateTransaction(@PathVariable("id") Long transactionId,
-                                            @RequestBody TransactionDto transaction) throws TransactionNotFoundException{
-        return transactionService.updateTransaction(transactionId,transaction);
-    }
-    */
 
 }
