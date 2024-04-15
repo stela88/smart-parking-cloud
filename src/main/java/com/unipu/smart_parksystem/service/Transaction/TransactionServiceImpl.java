@@ -1,7 +1,6 @@
 package com.unipu.smart_parksystem.service.Transaction;
 
 import com.unipu.smart_parksystem.constants.Constants;
-import com.unipu.smart_parksystem.dto.TicketDto;
 import com.unipu.smart_parksystem.dto.TransactionDto;
 import com.unipu.smart_parksystem.entity.Ticket;
 import com.unipu.smart_parksystem.entity.Transaction;

@@ -10,6 +10,7 @@ public class TransactionMapper {
         ReceiptDto receiptDto = new ReceiptDto();
         transactionDto.setTransactionId(transaction.getTransactionId());
         receiptDto.setPrice(transaction.getAmount());
+        transactionDto.setAmount(receiptDto.getPrice());
         transactionDto.setCreatedTs(transaction.getCreatedTs());
         transactionDto.setModifiedTs(transaction.getModifiedTs());
         transactionDto.setTicket(TicketMapper.convertEntityToDto(transaction.getTicket()));
