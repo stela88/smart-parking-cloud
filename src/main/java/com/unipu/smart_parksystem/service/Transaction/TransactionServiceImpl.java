@@ -45,6 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Instant now = Instant.now();
 
+        Instant timeOfExit = ticket.getTimeOfExit();
         Instant exitTimeout = ticket.getExitTimeout();
         BigDecimal paidAmount = transactionDto.getAmount();
         //------------------------------------------ plaćanje
@@ -54,6 +55,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         if (paidAmount.compareTo(amountToPay) != 0) {
             throw new IllegalArgumentException("Invalid amount paid, you need to pay: " + amountToPay);
+        }
+
+        if(timeOfExit != null) {
+            throw new IllegalArgumentException("Your ticket is not active");
         }
 
         ticket.setExitTimeout(exitTimeout.plus(hoursToPay, ChronoUnit.HOURS));
