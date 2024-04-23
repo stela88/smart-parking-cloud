@@ -130,7 +130,11 @@ public class TicketingServiceImpl implements TicketingService {
 
     @Override
     public Ticket fetchTicketByRegistration(String registration) {
-        return ticketRepository.findByRegistrationIgnoreCase(registration);
+        Ticket ticket = ticketRepository.findByRegistrationIgnoreCase(registration);
+        if (ticket == null) {
+            throw new TicketNotFoundException("Ticket not found for registration: " + registration);
+        }
+        return ticket;
     }
 
     @Override
