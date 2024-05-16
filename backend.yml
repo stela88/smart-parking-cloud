@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-park-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smart-park-system
+  template:
+    metadata:
+      labels:
+        app: smart-park-system
+    spec:
+      containers:
+        - name: smart-park-system
+          image: sgal88/backend:2.0
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://172.16.1.18:30000/smart-parking
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: password
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: update
+            - name: SPRING_JPA_SHOW_SQL
+              value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smart-park-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8082
+      targetPort: 8082
+  selector:
+    app: smart-park-system
