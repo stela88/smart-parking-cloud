@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@RestController()
-
-@CrossOrigin("http://localhost:8080/")
+@RestController
+@RequestMapping("/api/transactions")
 public class TransactionController {
 
     @Autowired
@@ -26,26 +25,26 @@ public class TransactionController {
     private final Logger LOGGER =
             LoggerFactory.getLogger(TransactionController.class);
 
-    @PostMapping("/transactions")
+    @PostMapping()
     public TransactionDto saveTransaction(@RequestBody TransactionDto transaction){
         LOGGER.info("Inside saveTransaction od TransactionController");
 
         return transactionService.saveTransaction(transaction);
     }
 
-    @GetMapping("/transactions")
+    @GetMapping()
     public List<TransactionDto> fetchTransactionList(){
         LOGGER.info("Inside fetchTransactionList of TransactionController");
         return transactionService.fetchTransactionList();
     }
 
-    @GetMapping("/transactions/{id}")
+    @GetMapping("/{id}")
     public TransactionDto fetchTransactionById(@PathVariable("id") Long transactionId)
             throws TransactionNotFoundException{
         return transactionService.fetchTransactionById(transactionId);
     }
 
-    @DeleteMapping("/transactions/{id}")
+    @DeleteMapping("/{id}")
     public String deleteTransactionById(@PathVariable("id") Long transactionId){
         transactionService.deleteTransactiontById(transactionId);
         return "Transaction deleted successfully";
