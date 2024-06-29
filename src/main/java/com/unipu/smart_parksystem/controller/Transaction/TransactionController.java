@@ -1,8 +1,6 @@
 package com.unipu.smart_parksystem.controller.Transaction;
 
-import com.unipu.smart_parksystem.dto.ReceiptDto;
 import com.unipu.smart_parksystem.dto.TransactionDto;
-import com.unipu.smart_parksystem.entity.Transaction;
 import com.unipu.smart_parksystem.error.Transaction.TransactionNotFoundException;
 import com.unipu.smart_parksystem.service.Ticket.TicketingService;
 import com.unipu.smart_parksystem.service.Transaction.TransactionService;
@@ -15,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     @Autowired
