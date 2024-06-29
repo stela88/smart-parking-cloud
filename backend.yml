@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
         - name: smart-park-system
-          image: sgal88/backend:3.0
+          image: sgal88/backend:2.0
           ports:
             - containerPort: 8082
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://172.16.1.18:30000/smart-parking
+              value: jdbc:mysql://192.168.137.253:30000/smart-parking
             - name: SPRING_DATASOURCE_USERNAME
               value: root
             - name: SPRING_DATASOURCE_PASSWORD
