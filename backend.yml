@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: smart-park-system
-          image: sgal88/backend:2.0
+          image: sgal88/backend:2.1
           ports:
             - containerPort: 8082
           env:
